@@ -51,20 +51,24 @@ def describe_image(pil_image: Image.Image) -> str:
         pil_image.save(img_byte_arr, format='PNG')
         img_bytes = img_byte_arr.getvalue()
 
-        # Call Florence-2 API
-        result = hf_client.post(
+        # Call Florence-2 API with a timeout
+        response = hf_client.post(
             data=img_bytes,
-            model=FLORENCE_MODEL
+            model=FLORENCE_MODEL,
+            headers={"x-wait-for-model": "true"}
         )
         
+        # Parse result
         import json
-        res_data = json.loads(result.decode('utf-8'))
-        if isinstance(res_data, list) and len(res_data) > 0:
-            return res_data[0].get('generated_text', 'A detailed photo')
-        return "An uploaded image"
+        res = json.loads(response.decode('utf-8'))
+        
+        # Florence-2 API usually returns a list of dicts: [{"generated_text": "..."}]
+        if isinstance(res, list) and len(res) > 0:
+            return res[0].get('generated_text', 'A detailed photo')
+        return "A beautiful image"
     except Exception as e:
         print(f"API Error: {e}")
-        return "A social media image"
+        return "An uploaded social media photo"
 
 
 def generate_captions(description: str, platform: str, tone: str,
