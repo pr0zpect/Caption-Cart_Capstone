@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const { pool } = require('../config/db');
 
 const generateToken = (id) => {
-  return jwt.sign({ userId: id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+  const secret = process.env.JWT_SECRET || 'caption-craft-default-secret-xyz-123';
+  return jwt.sign({ userId: id }, secret, { expiresIn: '30d' });
 };
 
 exports.signup = async (req, res) => {
