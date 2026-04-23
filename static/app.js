@@ -13,7 +13,7 @@ const state = {
 
 const BACKEND_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
   ? "http://localhost:5001/api"
-  : "https://caption-craft-auth.onrender.com/api";
+  : "https://caption-craft-auth-production-e835.up.railway.app/api";
 
 // Elements
 const dropZone = document.getElementById("drop-zone");
