@@ -21,14 +21,17 @@ CORS(app)
 FLORENCE_MODEL_ID = "microsoft/Florence-2-base"
 print(f"[startup] Loading {FLORENCE_MODEL_ID} …")
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-dtype  = torch.float16 if device == "cuda" else torch.float32
+device = "cpu"
+torch_dtype = torch.float32
 
 florence_processor = AutoProcessor.from_pretrained(
     FLORENCE_MODEL_ID, trust_remote_code=True
 )
 florence_model = AutoModelForCausalLM.from_pretrained(
-    FLORENCE_MODEL_ID, trust_remote_code=True, attn_implementation="eager"
+    FLORENCE_MODEL_ID, 
+    trust_remote_code=True, 
+    torch_dtype=torch_dtype,
+    attn_implementation="eager"
 ).to(device)
 
 print("[startup] Florence-2 ready ✓")
