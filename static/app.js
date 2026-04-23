@@ -11,7 +11,7 @@ const state = {
   token: localStorage.getItem('token') || null
 };
 
-const BACKEND_URL = "https://large-signs-wink.loca.lt/api";
+const BACKEND_URL = "https://tender-feet-share.loca.lt/api";
 
 // Elements
 const dropZone = document.getElementById("drop-zone");
