@@ -32,7 +32,7 @@ florence_processor = AutoProcessor.from_pretrained(
     FLORENCE_MODEL_ID, trust_remote_code=True
 )
 florence_model = AutoModelForCausalLM.from_pretrained(
-    FLORENCE_MODEL_ID, torch_dtype=dtype, trust_remote_code=True
+    FLORENCE_MODEL_ID, trust_remote_code=True, attn_implementation="eager"
 ).to(device)
 
 print("[startup] Florence-2 ready ✓")
