@@ -3,11 +3,9 @@ from dotenv import load_dotenv
 load_dotenv()
 import io
 import base64
-import torch
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PIL import Image
-from transformers import AutoProcessor, AutoModelForCausalLM, PreTrainedModel
 from huggingface_hub import InferenceClient
 
 app = Flask(__name__, static_folder="static", static_url_path="")
