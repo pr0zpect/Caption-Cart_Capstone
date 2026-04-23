@@ -1,0 +1,25 @@
+services:
+  # 1. AI & Frontend Service (Python)
+  - type: web
+    name: caption-craft-ai
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    plan: starter # Requires at least 2GB RAM for Florence-2
+    envVars:
+      - key: HF_TOKEN
+        sync: false # Set this in the Render Dashboard
+
+  # 2. Auth & History Service (Node.js)
+  - type: web
+    name: caption-craft-auth
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    envVars:
+      - key: NEON_DATABASE_URL
+        sync: false # Set this in the Render Dashboard
+      - key: JWT_SECRET
+        generateValue: true

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CaptionCraft AI — Futuristic Captions</title>
+  <meta name="description" content="Turn any image into a viral caption with AI."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <!-- Inter for UI text, Space Grotesk for Headings -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- ─── Aesthetic Grid Background ─── -->
+  <div class="bg-grid"></div>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <!-- ─── AUTH GATE (Login Page) ─── -->
+  <div id="auth-gate" class="auth-gate-container">
+    <div class="gate-card">
+      <div class="logo center">
+        <div class="logo-stack">
+          <div class="layer layer-1"></div>
+          <div class="layer layer-2"></div>
+          <div class="layer layer-3"></div>
+        </div>
+        <span class="logo-text">CaptionCraft</span>
+      </div>
+      
+      <div id="gate-login">
+        <h2 class="gate-title">Welcome Back</h2>
+        <p class="gate-sub">Sign in to start creating viral captions.</p>
+        <input type="email" id="gate-email" placeholder="Email Address" class="modal-input">
+        <input type="password" id="gate-password" placeholder="Password" class="modal-input">
+        <button class="btn-primary full-width" id="gate-login-submit">Login</button>
+        <p class="modal-footer">New here? <span class="link" id="gate-show-signup">Create account</span></p>
+      </div>
+
+      <div id="gate-signup" class="hidden">
+        <h2 class="gate-title">Join CaptionCraft</h2>
+        <p class="gate-sub">The future of social media copy is here.</p>
+        <input type="text" id="gate-signup-name" placeholder="Full Name" class="modal-input">
+        <input type="email" id="gate-signup-email" placeholder="Email Address" class="modal-input">
+        <input type="password" id="gate-signup-password" placeholder="Password" class="modal-input">
+        <button class="btn-primary full-width" id="gate-signup-submit">Sign Up</button>
+        <p class="modal-footer">Already have an account? <span class="link" id="gate-show-login">Sign in</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MAIN APP CONTENT (Hidden until login) ─── -->
+  <div id="app-content" class="hidden">
+    <!-- ─── Header ─── -->
+    <header class="navbar">
+      <div class="logo">
+        <div class="logo-stack">
+          <div class="layer layer-1"></div>
+          <div class="layer layer-2"></div>
+          <div class="layer layer-3"></div>
+        </div>
+        <span class="logo-text">CaptionCraft</span>
+      </div>
+    <div class="nav-links">
+      <span class="nav-badge">Florence-2 Vision</span>
+      <button class="nav-btn" id="history-btn" style="display: none;">History</button>
+      <button class="nav-btn" id="auth-nav-btn">Login <span class="sparkle">✧</span></button>
+      <button class="nav-btn" id="logout-btn" style="display: none;">Logout</button>
+    </div>
+  </header>
+
+  <!-- ─── Auth Modal ─── -->
+  <div class="modal-overlay hidden" id="auth-modal">
+    <div class="modal-card">
+      <button class="close-modal" id="close-auth">&times;</button>
+      <div id="auth-login-view">
+        <h2 class="modal-title">Sign In</h2>
+        <div class="form-group">
+          <input type="email" id="login-email" placeholder="Email Address" class="modal-input">
+        </div>
+        <div class="form-group">
+          <input type="password" id="login-password" placeholder="Password" class="modal-input">
+        </div>
+        <button class="btn-primary full-width" id="login-submit">Login</button>
+        <p class="modal-footer">New here? <span class="link" id="show-signup">Create account</span></p>
+      </div>
+      <div id="auth-signup-view" class="hidden">
+        <h2 class="modal-title">Create Account</h2>
+        <div class="form-group">
+          <input type="text" id="signup-name" placeholder="Full Name" class="modal-input">
+        </div>
+        <div class="form-group">
+          <input type="email" id="signup-email" placeholder="Email Address" class="modal-input">
+        </div>
+        <div class="form-group">
+          <input type="password" id="signup-password" placeholder="Password" class="modal-input">
+        </div>
+        <button class="btn-primary full-width" id="signup-submit">Sign Up</button>
+        <p class="modal-footer">Already have an account? <span class="link" id="show-login">Sign in</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── History Modal ─── -->
+  <div class="modal-overlay hidden" id="history-modal">
+    <div class="modal-card wide">
+      <button class="close-modal" id="close-history">&times;</button>
+      <h2 class="modal-title">Your Caption History</h2>
+      <div id="history-content" class="history-list">
+        <!-- JS Injects Here -->
+      </div>
+    </div>
+  </div>
+
+  <div class="main-container">
+    
+    <!-- Left Hero Section -->
+    <section class="hero-section">
+      <h1 class="hero-title">
+        <span class="gradient-text-1">Image to caption</span><br/>
+        <span class="gradient-text-2">already built</span><br/>
+        <span class="solid-text">inside</span>
+      </h1>
+      <p class="hero-sub">
+        Upload your image and get a <span class="highlight">complete free caption suite</span> with 
+        different tones, social media targeting, semantic context, and emojis — built with the Florence-2 Vision model.
+      </p>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <h3>3</h3>
+          <p>Caption<br/>Variants</p>
+        </div>
+        <div class="stat-box">
+          <h3>5</h3>
+          <p>Social<br/>Platforms</p>
+        </div>
+        <div class="stat-box">
+          <h3>6</h3>
+          <p>Unique<br/>Tones</p>
+        </div>
+        <div class="stat-box">
+          <h3>∞</h3>
+          <p>Custom<br/>Context</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Dashboard Widget -->
+    <section class="dashboard-section">
+      <div class="dashboard-window">
+        <!-- Dashboard Header -->
+        <div class="window-header">
+          <div class="window-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="window-title">Caption Generator UI</div>
+          <div class="window-badge"><span class="sparkle">✧</span> Auto-generated</div>
+        </div>
+
+        <div class="window-body">
+          <!-- Panels Wrapper -->
+          <div class="card-wrap">
+            
+            <!-- Step Indicators -->
+            <div class="stepper">
+              <div class="step active" id="step-1">1. Image</div>
+              <div class="step-divider"></div>
+              <div class="step" id="step-2">2. Settings</div>
+              <div class="step-divider"></div>
+              <div class="step" id="step-3">3. Results</div>
+            </div>
+
+            <!-- Panel 1: Upload -->
+            <div class="panel active" id="panel-upload">
+              <div class="drop-zone" id="drop-zone" tabindex="0">
+                <input type="file" id="file-input" accept="image/*" hidden/>
+                <div class="drop-idle" id="drop-idle">
+                  <div class="upload-icon">
+                    <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                  </div>
+                  <h4>Drag & Drop image here</h4>
+                  <p>or <span class="link" id="browse-btn">browse files</span></p>
+                </div>
+                <div class="drop-preview hidden" id="drop-preview">
+                  <img id="preview-img" alt="Preview"/>
+                  <button class="btn-sm btn-glass over-img" id="change-img-btn">Change</button>
+                </div>
+              </div>
+              <div class="action-row right">
+                <button class="btn-primary" id="next-btn-1" disabled>Proceed <span class="arrow">→</span></button>
+              </div>
+            </div>
+
+            <!-- Panel 2: Config -->
+            <div class="panel hidden" id="panel-config">
+              <!-- Platform -->
+              <div class="form-group">
+                <label>Platform Target <span>Select one</span></label>
+                <div class="pill-group" id="platform-grid">
+                  <button class="pill active" data-value="instagram">Instagram</button>
+                  <button class="pill" data-value="twitter">Twitter</button>
+                  <button class="pill" data-value="linkedin">LinkedIn</button>
+                  <button class="pill" data-value="facebook">Facebook</button>
+                  <button class="pill" data-value="tiktok">TikTok</button>
+                </div>
+              </div>
+
+              <!-- Tone -->
+              <div class="form-group">
+                <label>Vibe & Tone <span>Select one</span></label>
+                <div class="pill-group" id="tone-grid">
+                  <button class="pill active" data-value="casual">Casual</button>
+                  <button class="pill" data-value="funny">Funny</button>
+                  <button class="pill" data-value="professional">Professional</button>
+                  <button class="pill" data-value="sarcastic">Sarcastic</button>
+                  <button class="pill" data-value="inspirational">Inspirational</button>
+                  <button class="pill" data-value="aesthetic">Aesthetic</button>
+                </div>
+              </div>
+
+              <!-- Extra Context -->
+              <div class="form-group">
+                <label>Extra Context <span>(Optional)</span></label>
+                <textarea id="extra-input" placeholder="E.g. Promoting a new SaaS tool..."></textarea>
+              </div>
+
+              <div class="action-row split">
+                <button class="btn-secondary" id="back-btn-1"><span class="arrow">←</span> Back</button>
+                <button class="btn-primary glow" id="generate-btn">
+                  <span id="gen-label"><span class="sparkle">✧</span> Generate</span>
+                  <span id="gen-spinner" class="spinner hidden"></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Panel 3: Results -->
+            <div class="panel hidden" id="panel-results">
+              <div class="results-layout">
+                <div class="image-thumb">
+                  <img id="result-thumb" src=""/>
+                  <div class="vision-tag">AI Vision Analyzed</div>
+                </div>
+                
+                <div class="captions-container" id="captions-list">
+                  <!-- JS Injects Here -->
+                </div>
+              </div>
+
+              <div class="action-row split">
+                <button class="btn-secondary" id="back-btn-2">Settings</button>
+                <button class="btn-secondary" id="start-over-btn">Reset</button>
+                <button class="btn-primary" id="regenerate-btn">Regenerate <span class="arrow">↻</span></button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  </div> <!-- End app-content -->
+
+  <div class="toast hidden" id="toast">Copied!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
