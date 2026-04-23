@@ -18,7 +18,7 @@ CORS(app)
 # Models & Inference API
 # ──────────────────────────────────────────────
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
-ZEPHYR_MODEL = "mistralai/Mistral-7B-Instruct-v0.3"
+ZEPHYR_MODEL = "Qwen/Qwen2.5-7B-Instruct"
 FLORENCE_MODEL = "microsoft/Florence-2-base"
 
 hf_client = InferenceClient(token=HF_TOKEN if HF_TOKEN else None)
