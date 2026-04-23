@@ -13,7 +13,7 @@ const state = {
 
 const BACKEND_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
   ? "http://localhost:5001/api"
-  : "https://tender-feet-share.loca.lt/api";
+  : "https://itchy-parrot-17.loca.lt/api";
 
 // Elements
 const dropZone = document.getElementById("drop-zone");
