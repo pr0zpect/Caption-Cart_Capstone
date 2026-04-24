@@ -25,7 +25,12 @@ const initDB = async () => {
       id SERIAL PRIMARY KEY,
       user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
       image_url TEXT,
+      image_data TEXT,
       caption_text TEXT NOT NULL,
+      platform VARCHAR(50),
+      tone VARCHAR(50),
+      all_variations TEXT[],
+      hashtags TEXT[],
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;

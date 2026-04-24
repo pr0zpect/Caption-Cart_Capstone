@@ -188,6 +188,48 @@ def api_generate():
         return jsonify({"error": str(exc)}), 500
 
 
+def generate_hashtags(description: str, platform: str, tone: str) -> list[str]:
+    """Generate exactly 3 relevant hashtags."""
+    system_msg = "You are a social media growth expert. Generate a list of exactly 3 highly relevant and trending hashtags."
+    user_msg = (
+        f"Image description: {description}\n"
+        f"Platform: {platform}\n"
+        f"Tone: {tone}\n"
+        "Return ONLY 3 hashtags, separated by spaces. No other text."
+    )
+    
+    messages = [
+        {"role": "system", "content": system_msg},
+        {"role": "user",   "content": user_msg},
+    ]
+
+    response = hf_client.chat_completion(
+        messages=messages,
+        model=ZEPHYR_MODEL,
+        max_tokens=64,
+        temperature=0.7,
+    )
+    raw = response.choices[0].message.content.strip()
+    # Extract tags starting with #
+    import re
+    tags = re.findall(r"#\w+", raw)
+    return tags[:3] if tags else ["#trending", "#viral", "#ai"]
+
+
+@app.route("/api/hashtags", methods=["POST"])
+def api_hashtags():
+    try:
+        data = request.get_json(force=True)
+        description = data.get("description", "A beautiful image")
+        platform = data.get("platform", "instagram")
+        tone = data.get("tone", "casual")
+
+        hashtags = generate_hashtags(description, platform, tone)
+        return jsonify({"hashtags": hashtags})
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 500
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 7860))
     app.run(host="0.0.0.0", port=port)

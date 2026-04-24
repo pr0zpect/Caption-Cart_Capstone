@@ -40,6 +40,17 @@ export default function History() {
     }
   };
 
+  const getPlatformIcon = (platform) => {
+    switch (platform?.toLowerCase()) {
+      case 'instagram': return '📸';
+      case 'twitter': return '𝕏';
+      case 'linkedin': return '💼';
+      case 'facebook': return '👥';
+      case 'tiktok': return '🎵';
+      default: return '📝';
+    }
+  };
+
   if (loading) return <div style={{ color: 'white', padding: '2rem' }}>Loading history...</div>;
 
   return (
@@ -50,9 +61,12 @@ export default function History() {
       ) : (
         <div className="history-grid">
           {history.map(item => (
-            <div key={item.id} className="history-card">
+            <div key={item.id} className="history-card" style={{ position: 'relative' }}>
+              <div style={{ position: 'absolute', top: '1rem', right: '1rem', fontSize: '1.2rem', opacity: 0.7 }}>
+                {getPlatformIcon(item.platform)}
+              </div>
               <div>
-                <p className="caption-text">{item.caption_text}</p>
+                <p className="caption-text" style={{ paddingRight: '2rem' }}>{item.caption_text}</p>
                 <p className="timestamp">{new Date(item.created_at).toLocaleString()}</p>
               </div>
               <div style={{ marginTop: '1rem' }}>

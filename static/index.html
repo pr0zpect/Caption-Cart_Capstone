@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <!-- Inter for UI text, Space Grotesk for Headings -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css?v=3.0"/>
 </head>
 <body>
 
@@ -103,11 +103,46 @@
     </div>
   </div>
 
+  <!-- ─── Loading Modal ─── -->
+  <div class="modal-overlay hidden" id="loading-modal">
+    <div class="modal-card center-text">
+      <div class="loading-animation">
+        <div class="orbit-spinner">
+          <div class="orbit"></div>
+          <div class="orbit"></div>
+          <div class="orbit"></div>
+        </div>
+      </div>
+      <h2 class="loading-title" id="loading-step-text">🔍 Analyzing your image...</h2>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="loading-progress"></div>
+      </div>
+      <p class="loading-sub">Powered by Florence-2 Vision</p>
+    </div>
+  </div>
+
   <!-- ─── History Modal ─── -->
   <div class="modal-overlay hidden" id="history-modal">
-    <div class="modal-card wide">
+    <div class="modal-card wide history-modal-card">
       <button class="close-modal" id="close-history">&times;</button>
-      <h2 class="modal-title">Your Caption History</h2>
+      <div class="history-header">
+        <h2 class="modal-title">Your Caption History</h2>
+        <div class="history-filters-wrap">
+          <div class="pill-group-mini" id="history-filter-platform" data-label="Platform">
+            <button class="pill-mini active" data-value="all">All</button>
+            <button class="pill-mini" data-value="instagram">IG</button>
+            <button class="pill-mini" data-value="twitter">X</button>
+            <button class="pill-mini" data-value="linkedin">LI</button>
+            <button class="pill-mini" data-value="tiktok">TT</button>
+          </div>
+          <div class="pill-group-mini" id="history-filter-tone" data-label="Vibe">
+            <button class="pill-mini active" data-value="all">All</button>
+            <button class="pill-mini" data-value="casual">Casual</button>
+            <button class="pill-mini" data-value="funny">Funny</button>
+            <button class="pill-mini" data-value="professional">Pro</button>
+          </div>
+        </div>
+      </div>
       <div id="history-content" class="history-list">
         <!-- JS Injects Here -->
       </div>
@@ -273,6 +308,6 @@
 
   <div class="toast hidden" id="toast">Copied!</div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=3.0"></script>
 </body>
 </html>

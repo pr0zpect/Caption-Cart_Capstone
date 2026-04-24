@@ -24,6 +24,7 @@ export default function Dashboard() {
   const handleGenerate = async () => {
     if (!preview) return alert('Please upload an image first');
     setLoading(true);
+    setResult(null);
     try {
       // 1. Generate from Flask AI Server
       const aiRes = await fetch('http://localhost:5005/api/generate', {
@@ -38,29 +39,40 @@ export default function Dashboard() {
       const aiData = await aiRes.json();
       
       if (aiRes.ok) {
-        const generatedCaption = aiData.captions[0];
         setResult(aiData);
-
-        // 2. Save to History (Node.js Backend)
-        const token = localStorage.getItem('token');
-        await fetch('http://localhost:5001/api/history', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            caption_text: generatedCaption,
-            image_url: null // You could store base64 or upload to S3 here
-          })
-        });
       } else {
         alert(aiData.error || 'AI Generation failed');
       }
     } catch (err) {
-      alert('Error connecting to AI server. Make sure Flask app.py is running on port 5000');
+      alert('Error connecting to AI server. Make sure Flask app.py is running on port 5005');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSave = async (captionText) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch('http://localhost:5001/api/history', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          caption_text: captionText,
+          platform: result.platform,
+          image_url: null 
+        })
+      });
+      
+      if (res.ok) {
+        alert('Saved to history!');
+      } else {
+        alert('Failed to save history');
+      }
+    } catch (err) {
+      alert('Error saving to history');
     }
   };
 
@@ -130,8 +142,22 @@ export default function Dashboard() {
           <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#333', borderRadius: '8px' }}>
             <h3 style={{ marginTop: 0 }}>Generated Captions:</h3>
             {result.captions.map((cap, i) => (
-              <div key={i} style={{ marginBottom: '1rem', padding: '10px', borderLeft: '4px solid #e50914', background: '#222' }}>
-                {cap}
+              <div key={i} style={{ marginBottom: '1.5rem', padding: '15px', borderLeft: '4px solid #e50914', background: '#222', borderRadius: '4px' }}>
+                <div style={{ marginBottom: '10px', lineHeight: '1.5' }}>{cap}</div>
+                <button 
+                  onClick={() => handleSave(cap)}
+                  style={{ 
+                    background: '#e50914', 
+                    color: 'white', 
+                    border: 'none', 
+                    padding: '5px 10px', 
+                    borderRadius: '4px', 
+                    cursor: 'pointer',
+                    fontSize: '0.8rem'
+                  }}
+                >
+                  Save to History
+                </button>
               </div>
             ))}
           </div>
