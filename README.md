@@ -25,25 +25,8 @@ Display + one-click copy
 - 📋 One-click copy for each caption
 - 🌓 Dark glassmorphic UI
 
-## Setup
-
-### 1. Get a HuggingFace token
-Create a free token at https://huggingface.co/settings/tokens (read access is enough).
-
-### 2. Configure environment
-```bash
-cp .env.example .env
-# Edit .env and set HF_TOKEN=hf_your_token
-```
-
-### 3. Run
-```bash
-bash run.sh
-```
-Then open http://127.0.0.1:5000
-
-> **First run** will download Florence-2 (~900 MB) and cache Zephyr-7b via HF Inference API. Subsequent runs are fast.
-
+## Deployment Link
+https://caption-craft-ai-production-3190.up.railway.app/
 ## Tech Stack
 
 | Layer    | Model / Library                        |
