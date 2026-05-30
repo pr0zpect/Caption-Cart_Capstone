@@ -1,0 +1,3 @@
+# Force Nixpacks to use the Node provider for this service
+[providers]
+node = {}
