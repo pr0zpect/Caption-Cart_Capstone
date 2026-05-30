@@ -388,9 +388,32 @@ logoutBtn.addEventListener("click", () => {
 
 // History Save
 async function saveToHistory(caption, allVariants, isSilent = false) {
-  if (!state.token) return null;
+  // Always save to LocalStorage first as a robust local copy
+  const localItem = {
+    id: Date.now(),
+    caption_text: caption,
+    platform: state.platform,
+    tone: state.tone,
+    image_data: state.imageDataUrl,
+    all_variations: allVariants,
+    hashtags: state.lastHashtags || [],
+    created_at: new Date().toISOString()
+  };
   
   try {
+    const localData = JSON.parse(localStorage.getItem("local_captions_history") || "[]");
+    localData.unshift(localItem);
+    localStorage.setItem("local_captions_history", JSON.stringify(localData));
+  } catch(e) {
+    console.error("Local save failed", e);
+  }
+
+  if (!state.token) return localItem;
+  
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+
     const res = await fetch(`${BACKEND_URL}/history`, {
       method: "POST",
       headers: { 
@@ -404,35 +427,55 @@ async function saveToHistory(caption, allVariants, isSilent = false) {
         image_data: state.imageDataUrl,
         all_variations: allVariants,
         hashtags: state.lastHashtags || []
-      })
+      }),
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
     
     const data = await res.json();
     if (res.ok) {
       if (!isSilent) showToast(`Saved to History!`);
       return data;
     } else {
-      if (!isSilent) showToast("Error: " + data.error);
+      if (!isSilent) showToast("Saved to Local History!");
     }
   } catch (err) { 
-    console.error("History save failed", err);
+    console.warn("Backend save failed, saved locally:", err);
+    if (!isSilent) showToast("Saved to Local History!");
   }
-  return null;
+  return localItem;
 }
 
 async function updateHistoryItem(id, newCaption) {
+  // Update LocalStorage first
   try {
+    const localData = JSON.parse(localStorage.getItem("local_captions_history") || "[]");
+    const idx = localData.findIndex(h => h.id === id);
+    if (idx !== -1) {
+      localData[idx].caption_text = newCaption;
+      localStorage.setItem("local_captions_history", JSON.stringify(localData));
+    }
+  } catch(e) {
+    console.error("Local update failed", e);
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+
     const res = await fetch(`${BACKEND_URL}/history/${id}`, {
       method: "PUT",
       headers: { 
         "Content-Type": "application/json",
         "Authorization": `Bearer ${state.token}`
       },
-      body: JSON.stringify({ caption_text: newCaption })
+      body: JSON.stringify({ caption_text: newCaption }),
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
     return await res.json();
   } catch (err) {
-    console.error("Update failed", err);
+    console.warn("Backend update failed, updated locally", err);
   }
 }
 
@@ -448,13 +491,28 @@ async function fetchHistory() {
     </div>`;
   
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+
     const res = await fetch(`${BACKEND_URL}/history`, {
-      headers: { "Authorization": `Bearer ${state.token}` }
+      headers: { "Authorization": `Bearer ${state.token}` },
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
+    
+    if (!res.ok) throw new Error("Backend error status");
+    
     fullHistory = await res.json();
     renderHistoryList(fullHistory);
   } catch (err) {
-    historyContent.innerHTML = "<p class='error-text'>Error loading history.</p>";
+    console.warn("Backend fetch failed, loading from local history:", err);
+    try {
+      const localData = localStorage.getItem("local_captions_history") || "[]";
+      fullHistory = JSON.parse(localData);
+      renderHistoryList(fullHistory);
+    } catch (e) {
+      historyContent.innerHTML = "<p class='error-text'>Error loading history.</p>";
+    }
   }
 }
 
@@ -579,13 +637,29 @@ function getPlatformLogo(platform) {
 }
 
 window.deleteHistoryItem = async (id) => {
+  // Delete from LocalStorage first
   try {
+    let localData = JSON.parse(localStorage.getItem("local_captions_history") || "[]");
+    localData = localData.filter(h => h.id !== id);
+    localStorage.setItem("local_captions_history", JSON.stringify(localData));
+  } catch(e) {
+    console.error("Local delete failed", e);
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+
     await fetch(`${BACKEND_URL}/history/${id}`, {
       method: "DELETE",
-      headers: { "Authorization": `Bearer ${state.token}` }
+      headers: { "Authorization": `Bearer ${state.token}` },
+      signal: controller.signal
     });
-    historyBtn.click(); // Refresh
-  } catch (err) { showToast("Delete failed"); }
+    clearTimeout(timeoutId);
+  } catch (err) { 
+    console.warn("Backend delete failed, deleted locally", err);
+  }
+  fetchHistory(); // Refresh view
 };
 
 document.getElementById("close-history").addEventListener("click", () => historyModal.classList.add("hidden"));
